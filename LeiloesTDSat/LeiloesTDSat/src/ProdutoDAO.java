@@ -37,9 +37,36 @@ public class ProdutoDAO {
         } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto: " + sqle.getMessage());
         }
-        
+
         prep.close();
         conn.close();
+    }
+
+    public ArrayList<Produto> listarProdutos() throws SQLException {
+        String sql = "SELECT * FROM produtos";
+
+        try {
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+
+            while (resultset.next()) {
+                Produto produto = new Produto();
+                produto.setId(resultset.getInt("id"));
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                produto.setStatus(resultset.getString("status"));
+
+                listagem.add(produto);
+            }
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos: " + sqle.getMessage());
+        }
+
+        resultset.close();
+        prep.close();
+        conn.close();
+
+        return listagem;
     }
 
 }

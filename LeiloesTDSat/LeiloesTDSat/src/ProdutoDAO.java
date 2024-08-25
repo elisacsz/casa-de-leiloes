@@ -20,7 +20,7 @@ public class ProdutoDAO {
     public void cadastrarProduto(Produto produto) throws SQLException {
         if (produto.getNome() == null || produto.getNome().trim().isEmpty()
                 || produto.getValor() == null) {
-            throw new IllegalArgumentException("Preencha todos os campos corretamente.");
+            throw new IllegalArgumentException("Preencha todos os campos.");
         }
 
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?,?,?)";
@@ -67,6 +67,25 @@ public class ProdutoDAO {
         conn.close();
 
         return listagem;
+    }
+
+    public void venderProduto(int id) {
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+
+        try {
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, "Vendido");
+            prep.setInt(2, id);
+
+            int linhas = prep.executeUpdate();
+            if (linhas > 0) {
+                JOptionPane.showMessageDialog(null, "Venda do produto realizada com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Insira um produto válido.");
+            }
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar produto: " + sqle.getMessage());
+        }
     }
 
 }

@@ -1,6 +1,8 @@
+
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -125,21 +127,35 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cadastroNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroNomeActionPerformed
-        
-        
+
+
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        Produto produto = new Produto();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
+        String nome = cadastroNome.getText().trim();
+        String valorStr = cadastroValor.getText().trim();
         String status = "A Venda";
+
+        if (nome.isEmpty() || valorStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
+            return;
+        }
+
+        int valor;
+        try {
+            valor = Integer.parseInt(valorStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O valor deve ser um número válido.");
+            return;
+        }
+
+        Produto produto = new Produto();
         produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
+        produto.setValor(valor);
         produto.setStatus(status);
-        
+
         ProdutoDAO produtoDAO = new ProdutoDAO();
-        try {              
+        try {
             produtoDAO.cadastrarProduto(produto);
         } catch (SQLException ex) {
             Logger.getLogger(cadastroVIEW.class.getName()).log(Level.SEVERE, null, ex);

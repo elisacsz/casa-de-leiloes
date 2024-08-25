@@ -18,6 +18,11 @@ public class ProdutoDAO {
     }
 
     public void cadastrarProduto(Produto produto) throws SQLException {
+        if (produto.getNome() == null || produto.getNome().trim().isEmpty()
+                || produto.getValor() == null) {
+            throw new IllegalArgumentException("Preencha todos os campos corretamente.");
+        }
+
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?,?,?)";
 
         try {
@@ -32,10 +37,9 @@ public class ProdutoDAO {
         } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto: " + sqle.getMessage());
         }
-
+        
         prep.close();
         conn.close();
-
     }
 
 }
